@@ -1,0 +1,33 @@
+[Narrator] Welcome to the Text-to-Speech demonstration. This is a simple example showing how to format dialogue.
+
+[Alice] Hello everyone! I'm Alice, and I'll be demonstrating this wonderful TTS tool.
+
+[Bob] Hi there! I'm Bob. This application is really impressive - it has zero complex dependencies.
+
+[Alice] That's right! All you need is Python and one simple pip install. No Rust, no heavy frameworks, just gTTS.
+
+[Charlie] Amazing! How does it work exactly?
+
+[Bob] It's simple. You write dialogue with speaker tags like [SPEAKER] and click Generate MP3.
+
+[Alice] The app parses the text, generates audio for each line using different voice variants, and combines them into a single MP3 file.
+
+[Charlie] That sounds very straightforward. What about the voice quality?
+
+[Narrator] The voice quality is powered by Google's Text-to-Speech service, which provides natural-sounding speech in multiple English variants.
+
+[Alice] You can use different English variants for variety: en, en-us, en-gb, en-au, en-ie, and en-za.
+
+[Bob] And the best part? There's a beautiful GUI with progress tracking and easy file management.
+
+[Charlie] I'm convinced! Where can I get started?
+
+[Narrator] Simply run run.bat on Windows or run.sh on macOS and Linux. The app opens instantly with the GUI.
+
+[Alice] Just paste your dialogue into the text area, click Generate MP3, and you're done!
+
+[Bob] Your audio file will be saved to the output folder. You can then download it, edit it, or share it.
+
+[All] This is the future of simple text-to-speech!
+
+[Narrator] Thank you for watching this demonstration. Happy speaking!
