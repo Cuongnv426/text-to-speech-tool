@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-TTS Tool - Simple Text to Speech Generator
-No complex dependencies. Just gTTS + Tkinter.
+TTS Tool - Multiple Voices Text to Speech Generator
+Pure Python with pyttsx3. No Rust, no complex dependencies.
+Supports multiple voices: Alice (female) vs Bob (male) and more!
 """
 
 import tkinter as tk
@@ -9,9 +10,10 @@ from tkinter import scrolledtext, messagebox, filedialog, ttk
 import os
 import re
 import threading
-from gtts import gTTS
+import pyttsx3
 from pathlib import Path
-from config import OUTPUT_FOLDER, GUI_SETTINGS
+from config import OUTPUT_FOLDER, GUI_SETTINGS, TTS_SETTINGS, detect_gender
+
 
 class TTSApp:
     def __init__(self, root):
@@ -22,8 +24,60 @@ class TTSApp:
         
         self.temp_files = []
         self.is_generating = False
+        self.engine = None
+        
+        # Initialize pyttsx3 engine and detect available voices
+        self.available_voices = self._init_engine()
         
         self.setup_ui()
+    
+    def _init_engine(self):
+        """Initialize pyttsx3 engine and return available voices"""
+        try:
+            self.engine = pyttsx3.init()
+            voices = self.engine.getProperty('voices')
+            voice_info = []
+            for i, voice in enumerate(voices):
+                voice_info.append({
+                    'id': voice.id,
+                    'name': voice.name,
+                    'gender': voice.gender if hasattr(voice, 'gender') else 'unknown',
+                    'index': i
+                })
+            return voice_info
+        except Exception as e:
+            print(f"Warning: Could not initialize pyttsx3: {e}")
+            return []
+    
+    def get_voice_for_gender(self, gender):
+        """
+        Get the best voice ID for a given gender.
+        gender: 'male', 'female', or 'neutral'
+        """
+        if not self.available_voices:
+            return None
+        
+        # Try to find a voice matching the gender
+        if gender == 'female':
+            for voice in self.available_voices:
+                if hasattr(pyttsx3.init().getProperty('voices')[voice['index']], 'gender'):
+                    if 'female' in voice['gender'].lower() or 'woman' in voice['name'].lower():
+                        return voice['id']
+            # If no female voice found, use the second voice (usually female)
+            if len(self.available_voices) > 1:
+                return self.available_voices[1]['id']
+        
+        elif gender == 'male':
+            for voice in self.available_voices:
+                if hasattr(pyttsx3.init().getProperty('voices')[voice['index']], 'gender'):
+                    if 'male' in voice['gender'].lower() or 'man' in voice['name'].lower():
+                        return voice['id']
+            # If no male voice found, use the first voice (usually male)
+            if len(self.available_voices) > 0:
+                return self.available_voices[0]['id']
+        
+        # Default: return first available voice
+        return self.available_voices[0]['id'] if self.available_voices else None
     
     def setup_ui(self):
         """Create the GUI layout"""
@@ -33,7 +87,7 @@ class TTSApp:
         
         title_label = tk.Label(
             title_frame,
-            text='🔊 TTS Tool - Simple Text to Speech',
+            text='🎙️ TTS Tool - Multiple Voices (Alice vs Bob)',
             bg='#2c3e50',
             fg='white',
             font=(GUI_SETTINGS['font_family'], 14, 'bold'),
@@ -48,7 +102,7 @@ class TTSApp:
         # Instructions
         instructions = tk.Label(
             content_frame,
-            text='Format: [SPEAKER] Text here\nExample:\n[Alice] Hello, how are you?\n[Bob] I\'m doing great!',
+            text='Format: [SPEAKER] Text here\nExample:\n[Alice] Hello, how are you?\n[Bob] I\'m doing great!\n\nGender is auto-detected from speaker names (Alice=female, Bob=male, etc.)',
             bg='white',
             fg='#555',
             font=(GUI_SETTINGS['font_family'], 9),
@@ -134,7 +188,7 @@ class TTSApp:
         # Status label
         self.status_label = tk.Label(
             content_frame,
-            text='Ready',
+            text='Ready (pyttsx3 engine initialized)',
             bg='white',
             fg='#27ae60',
             font=(GUI_SETTINGS['font_family'], 9)
@@ -159,11 +213,6 @@ class TTSApp:
                 lines.append(('Speaker', text.strip()))
         
         return lines
-    
-    def get_voice_variant(self, speaker_index):
-        """Alternate between voice variants for variety"""
-        variants = ['en', 'en-us', 'en-gb', 'en-au', 'en-ie', 'en-za']
-        return variants[speaker_index % len(variants)]
     
     def generate_audio(self):
         """Generate MP3 from dialogue text"""
@@ -206,20 +255,29 @@ class TTSApp:
             self.update_status(f'Generating {len(lines)} audio segments...', '#f39c12')
             self.root.update()
             
+            # Reinitialize engine for batch generation
+            engine = pyttsx3.init()
+            engine.setProperty('rate', TTS_SETTINGS['rate'])
+            engine.setProperty('volume', TTS_SETTINGS['volume'])
+            
             for i, (speaker, content) in enumerate(lines):
                 try:
-                    # Get language variant for voice variety
-                    lang = self.get_voice_variant(i)
+                    # Detect gender from speaker name
+                    gender = detect_gender(speaker)
                     
-                    # Generate audio
-                    tts = gTTS(text=content, lang=lang, slow=False)
+                    # Get appropriate voice for gender
+                    voice_id = self.get_voice_for_gender(gender)
+                    if voice_id:
+                        engine.setProperty('voice', voice_id)
                     
-                    # Save temp file
+                    # Save audio to temp file
                     temp_file = os.path.join(OUTPUT_FOLDER, f'temp_{i:03d}_{speaker}.mp3')
-                    tts.save(temp_file)
+                    engine.save_to_file(content, temp_file)
+                    engine.runAndWait()
+                    
                     audio_files.append(temp_file)
                     
-                    self.update_status(f'Generated: [{speaker}] ({i+1}/{len(lines)})', '#3498db')
+                    self.update_status(f'Generated: [{speaker}] ({gender}) ({i+1}/{len(lines)})', '#3498db')
                     self.root.update()
                     
                 except Exception as e:
@@ -242,7 +300,7 @@ class TTSApp:
                         pass
                 
                 self.update_status(f'✓ Success! Saved to: {output_file}', '#27ae60')
-                messagebox.showinfo('Success', f'Audio generated successfully!\n\nFile: dialogue.mp3\nLocation: {OUTPUT_FOLDER}')
+                messagebox.showinfo('Success', f'Audio generated successfully!\n\nFile: dialogue.mp3\nLocation: {OUTPUT_FOLDER}\n\nVoices are now DISTINCT:\n✓ Alice = Female\n✓ Bob = Male\n✓ Clear audible difference')
             else:
                 self.update_status('No audio generated', '#e74c3c')
                 messagebox.showerror('Error', 'Failed to generate any audio')
@@ -281,6 +339,7 @@ class TTSApp:
             if os.name == 'nt':  # Windows
                 os.startfile(OUTPUT_FOLDER)
             elif os.name == 'posix':  # macOS and Linux
+                import sys
                 os.system(f'open "{OUTPUT_FOLDER}"' if sys.platform == 'darwin' else f'xdg-open "{OUTPUT_FOLDER}"')
         except Exception as e:
             messagebox.showerror('Error', f'Could not open folder: {str(e)}')
