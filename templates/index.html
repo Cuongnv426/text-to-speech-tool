@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTS Tool - English Learning</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🎙️ Text-to-Speech Tool</h1>
+                <p class="subtitle">Convert English dialogues into MP3 for learning</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="grid-layout">
+                <!-- Left Panel: Input -->
+                <section class="panel input-panel">
+                    <h2>📝 Paste Your Dialogue</h2>
+                    
+                    <div class="form-group">
+                        <label for="dialogue-text">Dialogue Text</label>
+                        <textarea 
+                            id="dialogue-text" 
+                            placeholder="[JOHN] Hello, how are you?&#10;[SARAH] Hi John! I'm doing great.&#10;[JOHN] That's wonderful!"
+                            rows="12"></textarea>
+                        <small class="help-text">Format: [SPEAKER_NAME] Text for speaker</small>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="detect-btn" class="btn btn-secondary">
+                            🔍 Detect Speakers
+                        </button>
+                        <button id="upload-btn" class="btn btn-secondary">
+                            📤 Load File
+                        </button>
+                        <input type="file" id="file-input" accept=".txt" style="display:none;">
+                    </div>
+                </section>
+
+                <!-- Right Panel: Configuration & Output -->
+                <section class="panel config-panel">
+                    <!-- Speakers Detection -->
+                    <div class="config-section">
+                        <h3>👥 Detected Speakers</h3>
+                        <div id="speakers-list" class="speakers-list">
+                            <p class="placeholder">Speakers will appear here</p>
+                        </div>
+                    </div>
+
+                    <!-- Voice Assignment -->
+                    <div class="config-section">
+                        <h3>🎙️ Voice Assignment</h3>
+                        <div id="voice-assignment" class="voice-assignment">
+                            <p class="placeholder">Assign voices after detecting speakers</p>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="form-group">
+                        <button id="generate-btn" class="btn btn-primary btn-large">
+                            🎵 Generate MP3
+                        </button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div id="progress-container" class="progress-container" style="display:none;">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <p id="progress-text">Generating audio...</p>
+                    </div>
+
+                    <!-- Result -->
+                    <div id="result-section" class="result-section" style="display:none;">
+                        <h3>✅ Success!</h3>
+                        <div class="result-info">
+                            <p><strong>Filename:</strong> <span id="result-filename"></span></p>
+                            <p><strong>Duration:</strong> <span id="result-duration"></span></p>
+                            <p><strong>Speakers:</strong> <span id="result-speakers"></span></p>
+                        </div>
+                        <div class="audio-player">
+                            <audio id="preview-audio" controls></audio>
+                        </div>
+                        <button id="download-btn" class="btn btn-success">
+                            ⬇️ Download MP3
+                        </button>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="error-section" class="error-section" style="display:none;">
+                        <h3>❌ Error</h3>
+                        <p id="error-message"></p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- History Section -->
+            <section class="panel history-panel">
+                <h2>📋 Recent Files</h2>
+                <div id="history-list" class="history-list">
+                    <p class="placeholder">No recent files</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>TTS Tool v1.0 | Built for English Learning 📚</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="/static/script.js"></script>
+</body>
+</html>

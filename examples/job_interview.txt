@@ -1,0 +1,14 @@
+[INTERVIEWER] Good morning! Thank you for coming today. Please have a seat.
+[CANDIDATE] Thank you for having me. I'm excited to be here.
+[INTERVIEWER] Tell me a bit about yourself and your experience.
+[CANDIDATE] Well, I have five years of experience in software development. I've worked with various programming languages and frameworks.
+[INTERVIEWER] That's impressive. What programming languages are you most proficient in?
+[CANDIDATE] I'm most comfortable with Python and JavaScript. I also have experience with Java and C++.
+[INTERVIEWER] Can you describe a challenging project you worked on?
+[CANDIDATE] Of course. At my previous company, I led the development of a mobile application that served thousands of users. We faced challenges with performance optimization, but we solved them by implementing caching strategies and optimizing database queries.
+[INTERVIEWER] How do you handle working with a team?
+[CANDIDATE] I believe in clear communication and collaboration. I enjoy sharing knowledge with my colleagues and helping them solve problems.
+[INTERVIEWER] That's great to hear. Do you have any questions for me?
+[CANDIDATE] Yes, could you tell me more about the team I would be working with?
+[INTERVIEWER] Certainly! Our team consists of eight developers, and we work on a variety of projects using modern technologies.
+[CANDIDATE] That sounds wonderful. I'm very interested in this opportunity.

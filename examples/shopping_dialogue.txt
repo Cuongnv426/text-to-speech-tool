@@ -1,0 +1,17 @@
+[CUSTOMER] Excuse me, where is the electronics section?
+[ASSISTANT] It's on the third floor. You can take the elevator over there.
+[CUSTOMER] Thank you! I'm looking for a new laptop. Do you have any recommendations?
+[ASSISTANT] Yes, we have several models available. What's your budget?
+[CUSTOMER] I'm looking to spend between twelve hundred and fifteen hundred dollars.
+[ASSISTANT] In that range, we have some excellent options. Follow me, please.
+[CUSTOMER] What brands do you recommend?
+[ASSISTANT] We carry Dell, Lenovo, and HP. All of them have good quality and reliability.
+[CUSTOMER] Do you have any with solid-state drives?
+[ASSISTANT] Yes, all our models in that price range come with SSDs. They're much faster than traditional hard drives.
+[CUSTOMER] That's great! Can I see this model here?
+[ASSISTANT] Of course! This is our most popular laptop. It has a great processor and good battery life.
+[CUSTOMER] How much is it?
+[ASSISTANT] It's thirteen hundred and ninety-nine dollars.
+[CUSTOMER] That's within my budget. Can I pay with a credit card?
+[ASSISTANT] Absolutely! We accept all major credit cards. Let me help you with the purchase.
+[CUSTOMER] Perfect! Thank you for your help.
